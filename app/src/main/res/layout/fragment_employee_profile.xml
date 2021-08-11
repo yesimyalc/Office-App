@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/blue4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="270sp"
+        android:background="@color/transparent_white4"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp">
+
+            <RelativeLayout
+                android:id="@+id/shape_layout"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:background="@drawable/profile_pic"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/myCardView"
+                    android:layout_width="124dp"
+                    android:layout_height="124dp"
+                    app:cardCornerRadius="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@+id/roundedimage"
+                        android:background="@drawable/no_avi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/profileNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Nick"
+            android:layout_marginTop="10sp"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/dark_blue"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Employee"
+            android:textColor="@color/light_pink"
+            android:textSize="15sp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/editButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="100dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="25sp"
+            app:cardElevation="20sp"
+            app:cardBackgroundColor="@color/dark_purple">
+
+            <ImageView
+                android:layout_width="70sp"
+                android:layout_height="60sp"
+                android:layout_gravity="center"
+                android:background="@drawable/editbg" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="13sp"
+        android:layout_marginLeft="10sp">
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Name: "
+            android:textSize="17sp"
+            android:textColor="@color/dark_blue"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5sp"
+        android:layout_marginLeft="10sp">
+
+        <TextView
+            android:id="@+id/profilePass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Password: "
+            android:textSize="17sp"
+            android:textColor="@color/dark_blue"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="5sp"
+        android:layout_marginLeft="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chosen Days"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@color/dark_blue"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/participatedDatesRV"
+        android:layout_marginTop="5sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

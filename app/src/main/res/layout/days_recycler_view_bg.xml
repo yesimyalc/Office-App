@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/light_pink">
+
+    <LinearLayout
+        android:layout_width="70sp"
+        android:layout_height="80sp"
+        android:background="@drawable/calendar_bg"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="4sp"
+            android:gravity="center"
+            android:text="December 09\nMonday"
+            android:textColor="@color/black"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="70sp"
+        android:layout_height="220sp"
+        android:background="@color/black">
+
+        <LinearLayout
+            android:id="@+id/dateColor"
+            android:layout_width="60sp"
+            android:layout_height="210sp"
+            android:layout_gravity="center"
+            android:background="@color/green"
+            android:orientation="vertical" />
+
+    </FrameLayout>
+
+</LinearLayout>
