@@ -1,21 +1,16 @@
 package com.example.officeapp
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.example.officeapp.*
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.tabs.TabLayout
 
-class EmployeeActivity : AppCompatActivity(),ActivityFragmentConnector
+class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
 {
-    private val homeFragment=UserHomePageFragment(this)
-    private val profileFragment=UserProfileFragment()
-    private val dateFragment=DateFragment()
+    private val homeFragment= UserHomePageFragment.newInstance(this)
+    private val profileFragment= UserProfileFragment()
+    private val dateFragment= DateFragment()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -29,18 +24,19 @@ class EmployeeActivity : AppCompatActivity(),ActivityFragmentConnector
 
         changeFragment(homeFragment)
 
-        val navigationBarEmployee=findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.navigationBarEmployee)
+        val navigationBarEmployee=findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(
+            R.id.navigationBarEmployee)
         navigationBarEmployee.setOnItemSelectedListener(object : NavigationBarView.OnItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId)
                 {
-                    R.id.home->{
+                    R.id.home ->{
                         if(dateFragment.isActive==false)
                             changeFragment(homeFragment)
                         else
                             changeFragment(dateFragment)
                     }
-                    R.id.profile->{changeFragment(profileFragment)}
+                    R.id.profile ->{changeFragment(profileFragment)}
                 }
                 return true
             }
@@ -51,10 +47,11 @@ class EmployeeActivity : AppCompatActivity(),ActivityFragmentConnector
     {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.currentPage, fragment)
+        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 
-    override fun onShowDateInfo(date:Date) {
+    override fun onShowDateInfo(date: Date) {
         val bundle = Bundle()
         bundle.putSerializable(Constants.CHOSEN_DATE, date)
         bundle.putString(Constants.LOGGEDIN_USERID, intent.getStringExtra(Constants.LOGGEDIN_USERID))

@@ -17,7 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class UserProfileFragment: Fragment(R.layout.fragment_employee_profile)
+class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), ProfileDatesRVConnector
 {
     private val viewModel:UserProfileViewModel by viewModels()
     private var fragmentView:View?=null
@@ -69,8 +69,12 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile)
     {
         val participatedRV = fragmentView?.findViewById<RecyclerView>(R.id.participatedDatesRV)
         participatedRV?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        participatedDaysRVAdapter = ParticipatedDaysRVAdapter(dates, activity?.applicationContext!!)
+        participatedDaysRVAdapter = ParticipatedDaysRVAdapter(dates, activity?.applicationContext!!, this)
         participatedRV?.adapter = participatedDaysRVAdapter
+    }
+
+    override fun onDelete(day: String) {
+        viewModel.deleteDay(day)
     }
 
 }

@@ -12,7 +12,7 @@ class UserHomePageViewModel(val state: SavedStateHandle) : ViewModel(), HomePage
     private val dateList:MutableLiveData<ArrayList<Date>> = state.getLiveData(Constants.DATE_LIST)
         fun getDateList():LiveData<ArrayList<Date>>{return dateList}
 
-    private val repository=HomePageRepository(this)
+    private val repository=UserHomePageRepository(this)
 
     init{
         dateList.value=ArrayList()

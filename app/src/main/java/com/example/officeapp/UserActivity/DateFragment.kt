@@ -25,7 +25,8 @@ class DateFragment : Fragment(R.layout.fragment_date)
         fragmentView=super.onCreateView(inflater, container, savedInstanceState)
 
         viewModel.setChosenDate(arguments?.getSerializable(Constants.CHOSEN_DATE) as Date)
-        viewModel.setLoggedInUser(arguments?.getString(Constants.LOGGEDIN_USERNAME)!!, arguments?.getString(Constants.LOGGEDIN_USERID)!!)
+        val userName=arguments?.getString(Constants.LOGGEDIN_USERNAME)!!
+        val userID=arguments?.getString(Constants.LOGGEDIN_USERID)!!
 
         viewModel.getChosenDate().observe(viewLifecycleOwner, {
             userNameList.clear()
@@ -44,18 +45,18 @@ class DateFragment : Fragment(R.layout.fragment_date)
         participateButton?.setOnClickListener {
             if(viewModel.getChosenDate().value?.getCap()==viewModel.getChosenDate().value?.getCurrentPeopleAmount())
                 Toast.makeText(activity?.applicationContext, "The capacity of this date is maxed. You cannot participate.", Toast.LENGTH_SHORT).show()
-            else if(viewModel.getChosenDate().value?.isParticipant(viewModel.loggedInUserID.value!!)==false)
-                viewModel.addUser()
+            else if(viewModel.getChosenDate().value?.isParticipant(userID)==false)
+                viewModel.addUser(userID, userName)
             else
                 Toast.makeText(activity?.applicationContext, "You are already a participant.", Toast.LENGTH_SHORT).show()
         }
 
         val cancelParticipateButton=fragmentView?.findViewById<LinearLayout>(R.id.cancelParticipateButton)
         cancelParticipateButton?.setOnClickListener{
-            if(viewModel.getChosenDate().value?.isParticipant(viewModel.loggedInUserID.value!!)==false)
+            if(viewModel.getChosenDate().value?.isParticipant(userID)==false)
                 Toast.makeText(activity?.applicationContext, "You are already not a participant.", Toast.LENGTH_SHORT).show()
             else
-                viewModel.deleteUser()
+                viewModel.deleteUser(userID)
         }
 
         return fragmentView

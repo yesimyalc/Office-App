@@ -7,9 +7,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class UserProfileRepository(userID: String, connector: ProfileViewRepConnector)
+class UserProfileRepository(val userID: String, connector: ProfileViewRepConnector)
 {
     private val userRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Employees").child(userID)
+    private val dateRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Calendar")
 
     init{
         userRef.addValueEventListener(object : ValueEventListener{
@@ -47,5 +48,11 @@ class UserProfileRepository(userID: String, connector: ProfileViewRepConnector)
                 Log.e("ERROR", error.message)
             }
         })
+    }
+
+    fun deleteUserFromDate(day:String)
+    {
+        dateRef.child(day).child("Users").child(userID).removeValue()
+        userRef.child("Days").child(day).removeValue()
     }
 }

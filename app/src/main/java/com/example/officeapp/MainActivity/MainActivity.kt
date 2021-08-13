@@ -5,13 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import java.util.*
 
 class MainActivity : AppCompatActivity()
 {
@@ -24,6 +20,7 @@ class MainActivity : AppCompatActivity()
         val enteredNick=findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.enteredNick)
         val enteredPass=findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.enteredPass)
 
+        enteredNick.text.toString()
         enteredNick.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -57,6 +54,7 @@ class MainActivity : AppCompatActivity()
             val intent= Intent(this, EmployeeActivity::class.java)
             intent.putExtra(Constants.LOGGEDIN_USERID, user.getUserID())
             intent.putExtra(Constants.LOGGEDIN_USERNAME, user.getUserName())
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             startActivity(intent)
             finish()
@@ -66,6 +64,7 @@ class MainActivity : AppCompatActivity()
             val intent= Intent(this, AdminActivity::class.java)
             intent.putExtra(Constants.LOGGEDIN_USERID, user.getUserID())
             intent.putExtra(Constants.LOGGEDIN_USERNAME, user.getUserName())
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             startActivity(intent)
             finish()

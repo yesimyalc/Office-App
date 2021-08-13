@@ -12,11 +12,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
 
-class UserHomePageFragment(val connector:ActivityFragmentConnector): Fragment(R.layout.fragment_employee_home_page), DateFragmentConnector
+class UserHomePageFragment(): Fragment(R.layout.fragment_employee_home_page), DateFragmentConnector
 {
     private var fragmentView:View?=null
     private var dateRVAdapter:CalendarRecyclerViewAdapter?=null
     private val viewModel:UserHomePageViewModel by viewModels()
+    private var connector:ActivityFragmentConnector?=null
+
+    companion object {
+        fun newInstance(connector: ActivityFragmentConnector): UserHomePageFragment {
+
+            val fragment = UserHomePageFragment()
+            fragment.setConnector(connector)
+            return fragment
+        }
+    }
+
+    fun setConnector(connector: ActivityFragmentConnector)
+    {
+        this.connector=connector
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -45,6 +60,6 @@ class UserHomePageFragment(val connector:ActivityFragmentConnector): Fragment(R.
     }
 
     override fun onDate(date: Date) {
-        connector.onShowDateInfo(date)
+        connector?.onShowDateInfo(date)
     }
 }
