@@ -50,7 +50,7 @@ class UserHomePageRepository(val connector: HomePageRepositoryConnector)
                         var max:Int?=null
                         if(ds.hasChild("Capacity"))
                             max=ds.child("Capacity").value.toString().toInt()
-                        val addedDate=Date(date?.date!!, date.month, (date.year)+1900, max?:10)
+                        val addedDate=Date(date?.date!!, date.month, (date.year)+1900, max?:generalCapacity)
                         for(user in ds.child("Users").children) {
                             addedDate.addUser(user.key!!, user.value!!.toString())
                         }

@@ -34,28 +34,14 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="17sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <NumberPicker
+                android:id="@+id/capacityPicker"
                 android:layout_marginRight="10sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50sp"
                 android:layout_gravity="center"
-                android:gravity="center"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
+                android:gravity="center" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:maxLength="5"
-                    android:gravity="center"
-                    android:id="@+id/generalCap"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

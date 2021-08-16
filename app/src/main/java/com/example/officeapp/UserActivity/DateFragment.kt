@@ -1,24 +1,24 @@
 package com.example.officeapp
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class DateFragment : Fragment(R.layout.fragment_date)
+class DateFragment(layout:Int) : Fragment(layout)
 {
     private var fragmentView:View?=null
     private val viewModel:DateViewModel by viewModels()
     private var participantsRVAdapter:ParticipantsRecyclerViewAdapter?=null
-    var isActive=false
     private val userNameList=ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,8 +35,6 @@ class DateFragment : Fragment(R.layout.fragment_date)
                 userNameList.add(user.value)
             participantsRVAdapter?.notifyDataSetChanged()
             setDateInfo()
-            if(viewModel.getChosenDate().value!=null)
-                isActive=true
         })
 
         setParticipantRecyclerView()
@@ -57,6 +55,24 @@ class DateFragment : Fragment(R.layout.fragment_date)
                 Toast.makeText(activity?.applicationContext, "You are already not a participant.", Toast.LENGTH_SHORT).show()
             else
                 viewModel.deleteUser(userID)
+        }
+
+        val editCapacityIcon=fragmentView?.findViewById<ImageView>(R.id.editCapacityIcon)
+        editCapacityIcon?.setOnClickListener{
+            val dialog= Dialog(fragmentView?.context!!)
+            dialog?.setContentView(R.layout.edit_capacity_dialog)
+            dialog?.show()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val capacityPicker=dialog?.findViewById<NumberPicker>(R.id.capacityPicker)
+            capacityPicker?.maxValue=1000
+            capacityPicker?.minValue=0
+
+            val saveButton=dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
+            saveButton?.setOnClickListener {
+                viewModel.changeCapacity(capacityPicker?.value!!)
+                dialog.dismiss()
+            }
         }
 
         return fragmentView

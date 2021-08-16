@@ -26,4 +26,13 @@ class UserProfileViewModel(val state: SavedStateHandle): ViewModel(),ProfileView
         loggedInUser.value=loggedInUser.value
         repository?.deleteUserFromDate(day)
     }
+
+    fun editInfo(nick: String, pass:String):String?
+    {
+        if(nick.isNullOrEmpty() || pass.isNullOrEmpty())
+            return "Enter information first."
+        repository?.editUserInfo(nick, pass)
+
+        return null
+    }
 }

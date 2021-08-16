@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/date"
+    android:layout_width="35sp"
+    android:layout_marginRight="7sp"
+    android:layout_marginBottom="7sp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="7sp"
+    android:background="@color/light_pink">
+
+    <TextView
+        android:id="@+id/dateInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+</LinearLayout>

@@ -56,29 +56,56 @@
             android:textColor="@color/dark_blue"/>
 
         <TextView
+            android:id="@+id/userStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Employee"
             android:textColor="@color/light_pink"
             android:textSize="15sp"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/editButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:cardCornerRadius="100dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="25sp"
-            app:cardElevation="20sp"
-            app:cardBackgroundColor="@color/dark_purple">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right">
 
-            <ImageView
-                android:layout_width="70sp"
-                android:layout_height="60sp"
-                android:layout_gravity="center"
-                android:background="@drawable/editbg" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/editButton"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:cardCornerRadius="100dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10sp"
+                app:cardElevation="5sp"
+                app:cardBackgroundColor="@color/dark_purple">
 
-        </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:layout_width="28sp"
+                    android:layout_height="26sp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/edit_icon" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/logoutButton"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:cardCornerRadius="100dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="20sp"
+                app:cardElevation="5sp"
+                app:cardBackgroundColor="@color/dark_purple">
+
+                <ImageView
+                    android:layout_width="28sp"
+                    android:layout_height="26sp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/logout_icon" />
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
 
     </LinearLayout>
 

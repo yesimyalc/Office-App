@@ -23,127 +23,243 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15sp"
-                android:layout_marginBottom="10sp"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:text="Add a New User"
-                android:textColor="@color/dark_blue"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-                android:layout_marginRight="10sp"
-                android:layout_marginLeft="10sp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/newUserNick"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="Enter User Nickname"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10sp"
-                android:layout_marginLeft="10sp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/newUserName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="Enter User Name"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10sp"
-                android:layout_marginLeft="10sp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/newUserPass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="Enter User Password"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical">
 
             <RadioGroup
-                android:id="@+id/newUserStatus"
-                android:layout_width="wrap_content"
+                android:id="@+id/barChoose"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@drawable/radio_group"
+                android:layout_marginRight="10sp"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="18sp">
 
                 <RadioButton
-                    android:id="@+id/newUserAdmin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Admin"
-                    android:checked="false"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="15sp"
-                    android:layout_margin="10sp"/>
+                    android:id="@+id/addUserBar"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="0.50"
+                    android:background="@drawable/drawable_units_tab_selector"
+                    android:textColor="@drawable/drawable_units_tab_text_color_selector"
+                    android:gravity="center"
+                    android:text="Add User"
+                    android:clickable="true"
+                    android:checked="true"
+                    android:onClick="onAllTasks"
+                    android:button="@null"
+                    />
 
                 <RadioButton
-                    android:id="@+id/newUserEmployee"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Employee"
+                    android:id="@+id/removeUserBar"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="0.50"
+                    android:background="@drawable/drawable_units_tab_selector"
+                    android:textColor="@drawable/drawable_units_tab_text_color_selector"
                     android:checked="false"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="15sp"
-                    android:layout_margin="10sp"/>
+                    android:text="Remove User"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="onCompletedTasks"
+                    android:button="@null"
+                    />
 
             </RadioGroup>
 
             <LinearLayout
-                android:id="@+id/addUserButton"
+                android:id="@+id/addUserLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10sp"
-                android:layout_marginTop="5sp"
-                android:layout_marginRight="10sp"
-                android:layout_marginBottom="20sp"
-                android:background="@drawable/log_in_button_bg"
-                android:gravity="center">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="7sp"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginBottom="10sp"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
-                    android:text="Save User"
-                    android:textColor="@color/transparent_white2"
-                    android:textSize="17sp" />
+                    android:text="Add a New User"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/newUserNick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Enter User Nickname"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/newUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Enter User Name"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/newUserPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Enter User Password"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RadioGroup
+                    android:id="@+id/newUserStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/newUserAdmin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin"
+                        android:checked="false"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="15sp"
+                        android:layout_margin="10sp"/>
+
+                    <RadioButton
+                        android:id="@+id/newUserEmployee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Employee"
+                        android:checked="false"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="15sp"
+                        android:layout_margin="10sp"/>
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:id="@+id/addUserButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginBottom="20sp"
+                    android:background="@drawable/log_in_button_bg"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7sp"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:text="Save User"
+                        android:textColor="@color/transparent_white2"
+                        android:textSize="17sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/removeUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginBottom="10sp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="Remove User"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/removedUserNick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Enter User Nickname"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/removeUserButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginBottom="20sp"
+                    android:background="@drawable/log_in_button_bg"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7sp"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:text="Remove User"
+                        android:textColor="@color/transparent_white2"
+                        android:textSize="17sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

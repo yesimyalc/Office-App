@@ -9,7 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="primaryPink">#F5BC295C</color>
-    <color name="light_blue">#791FC3B5</color>
     <color name="orange">#D8E34F20</color>
     <color name="orange_full">#FFE34F20</color>
     <color name="green">#FF259F2A</color>
@@ -25,10 +24,12 @@
     <color name="dark_purple">#FF744491</color>
     <color name="light_pink">#FFBB93D1</color>
     <color name="dark_purple2">#FF4D2D60</color>
+    <color name="transparent_light_pink">#FFF0E2F8</color>
 
     <color name="blue">#FF0A7E8C</color>
     <color name="teal">#FF2DBDB0</color>
     <color name="dark_blue">#FF303B77</color>
+    <color name="light_blue">#FFE8FDFF</color>
 
     <color name="transparent_blue">#700A7E8C</color>
     <color name="transparent_teal">#702DBDB0</color>

@@ -1,5 +1,9 @@
 package com.example.officeapp
 
+import android.app.Dialog
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,18 +28,33 @@ class AddUserFragment: Fragment(R.layout.fragment_add_user)
         val newUserPass=fragmentView?.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.newUserPass)
         val newUserAdmin=fragmentView?.findViewById<RadioButton>(R.id.newUserAdmin)
         val newUserEmployee=fragmentView?.findViewById<RadioButton>(R.id.newUserEmployee)
+        val removedUserNick=fragmentView?.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.removedUserNick)
+
+        val addUserBar=fragmentView?.findViewById<RadioButton>(R.id.addUserBar)
+        val removeUserBar=fragmentView?.findViewById<RadioButton>(R.id.removeUserBar)
+        addUserBar?.setOnClickListener {
+            switchSection()
+        }
+        removeUserBar?.setOnClickListener {
+            switchSection()
+        }
 
         val addUserButton=fragmentView?.findViewById<LinearLayout>(R.id.addUserButton)
         addUserButton?.setOnClickListener {
 
             viewModel.addUser(newUserNickname?.text.toString(), newUserName?.text.toString(), newUserPass?.text.toString(),
                 newUserAdmin?.isChecked!!, newUserEmployee?.isChecked!!)
+        }
 
+        val removeUserButton=fragmentView?.findViewById<LinearLayout>(R.id.removeUserButton)
+        removeUserButton?.setOnClickListener {
+            viewModel.removeUser(removedUserNick?.text.toString(), arguments?.getString(Constants.LOGGEDIN_USERNICK)!!)
         }
 
         viewModel.getState().observe(viewLifecycleOwner, {
-            if(viewModel.getState().value!="")
+            if(viewModel.getState().value!="" && viewModel.getState().value!="Removing current account.")
                 Toast.makeText(context, viewModel.getState().value, Toast.LENGTH_SHORT).show()
+
             if(viewModel.getState().value=="New user is added." || viewModel.getState().value=="User already exists.")
             {
                 newUserName?.text?.clear()
@@ -47,6 +66,33 @@ class AddUserFragment: Fragment(R.layout.fragment_add_user)
                 newUserAdmin?.isChecked=false
                 newUserEmployee?.isChecked=false
             }
+            else if(viewModel.getState().value=="User does not exist." || viewModel.getState().value=="User is removed.") {
+                removedUserNick?.text?.clear()
+                removedUserNick?.clearFocus()
+            }
+            else if(viewModel.getState().value=="Removing current account.")
+            {
+                val dialog= Dialog(fragmentView?.context!!)
+                dialog?.setContentView(R.layout.remove_account_dialog)
+                dialog?.show()
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
+                val noButton=dialog.findViewById<LinearLayout>(R.id.noButton)
+                noButton.setOnClickListener {
+                    dialog.dismiss()
+                }
+                val yesButton=dialog.findViewById<LinearLayout>(R.id.yesButton)
+                yesButton.setOnClickListener {
+
+                    viewModel.removeAccount(arguments?.getString(Constants.LOGGEDIN_USERNICK)!!)
+
+                    val intent= Intent(context, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    startActivity(intent)
+                    activity?.finish()
+                }
+            }
         })
 
         return fragmentView
@@ -55,5 +101,23 @@ class AddUserFragment: Fragment(R.layout.fragment_add_user)
     override fun onDestroy() {
         super.onDestroy()
         viewModel.setState("")
+    }
+
+    fun switchSection()
+    {
+        val addUserBar=fragmentView?.findViewById<RadioButton>(R.id.addUserBar)
+        val addUserLayout=fragmentView?.findViewById<LinearLayout>(R.id.addUserLayout)
+        val removeUserLayout=fragmentView?.findViewById<LinearLayout>(R.id.removeUserLayout)
+
+        if(addUserBar?.isChecked!!)
+        {
+            removeUserLayout?.visibility=View.GONE
+            addUserLayout?.visibility=View.VISIBLE
+        }
+        else
+        {
+            removeUserLayout?.visibility=View.VISIBLE
+            addUserLayout?.visibility=View.GONE
+        }
     }
 }

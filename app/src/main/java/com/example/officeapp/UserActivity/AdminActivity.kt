@@ -2,15 +2,17 @@ package com.example.officeapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.navigation.NavigationBarView
 
 class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
 {
     private val homeFragment= UserHomePageFragment.newInstance(this)
     private val profileFragment= UserProfileFragment()
-    private val dateFragment= DateFragment()
+    private val dateFragment= DateFragment(R.layout.fragment_date_admin)
     private val addUserFragment=AddUserFragment()
     private val settingsFragment=SettingsFragment()
 
@@ -24,7 +26,11 @@ class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
         bundle.putString(Constants.LOGGEDIN_USERNAME, intent.getStringExtra(Constants.LOGGEDIN_USERNAME))
         profileFragment.arguments = bundle
 
-        changeFragment(homeFragment)
+        val nickBundle=Bundle()
+        nickBundle.putString(Constants.LOGGEDIN_USERNICK, intent.getStringExtra(Constants.LOGGEDIN_USERNICK))
+        addUserFragment.arguments = nickBundle
+
+        changeFragment(homeFragment, "Home Page")
 
         val navigationBarAdmin=findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.navigationBarAdmin)
         navigationBarAdmin.setOnItemSelectedListener(object : NavigationBarView.OnItemSelectedListener{
@@ -32,25 +38,45 @@ class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
                 when(item.itemId)
                 {
                     R.id.home ->{
-                        if(dateFragment.isActive==false)
-                            changeFragment(homeFragment)
-                        else
-                            changeFragment(dateFragment)
+                        val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+                        val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
+                        if(!((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible()))) {
+
+                            if(!supportFragmentManager.popBackStackImmediate ("Home Page", FragmentManager.POP_BACK_STACK_INCLUSIVE))
+                                changeFragment(homeFragment, "Home Page")
+                        }
                     }
-                    R.id.profile ->{changeFragment(profileFragment)}
-                    R.id.addUser ->{changeFragment(addUserFragment)}
-                    R.id.settings ->{changeFragment(settingsFragment)}
+                    R.id.profile ->{changeFragment(profileFragment, "Profile Page")}
+                    R.id.addUser ->{changeFragment(addUserFragment, "Add User Page")}
+                    R.id.settings ->{changeFragment(settingsFragment, "Settings Page")}
                 }
                 return true
             }
         })
+
+        supportFragmentManager.addOnBackStackChangedListener {
+
+            val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+            val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
+            if (((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible())) && navigationBarAdmin.selectedItemId!=R.id.home) {
+                navigationBarAdmin.selectedItemId=R.id.home
+            }
+        }
     }
 
-    fun changeFragment(fragment: Fragment)
+    fun changeFragment(fragment: Fragment, tag:String)
     {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.currentPage, fragment)
-        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.replace(R.id.currentPage, fragment, tag)
+
+        val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
+        val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+
+        if (myFragment != null && myFragment.isVisible())
+            fragmentTransaction.addToBackStack("Home Page")
+        else if (myFragment2 != null && myFragment2.isVisible())
+            fragmentTransaction.addToBackStack("Date Page")
+
         fragmentTransaction.commit()
     }
 
@@ -60,7 +86,6 @@ class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
         bundle.putString(Constants.LOGGEDIN_USERID, intent.getStringExtra(Constants.LOGGEDIN_USERID))
         bundle.putString(Constants.LOGGEDIN_USERNAME, intent.getStringExtra(Constants.LOGGEDIN_USERNAME))
         dateFragment.arguments = bundle
-        dateFragment.isActive=true
-        changeFragment(dateFragment)
+        changeFragment(dateFragment, "Date Page")
     }
 }

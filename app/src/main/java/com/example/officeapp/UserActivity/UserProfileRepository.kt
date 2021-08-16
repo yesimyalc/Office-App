@@ -55,4 +55,10 @@ class UserProfileRepository(val userID: String, connector: ProfileViewRepConnect
         dateRef.child(day).child("Users").child(userID).removeValue()
         userRef.child("Days").child(day).removeValue()
     }
+
+    fun editUserInfo(nick: String, pass:String)
+    {
+        userRef.child(Constants.R_USER_NICK).setValue(nick)
+        userRef.child(Constants.R_USERPASS).setValue(pass)
+    }
 }

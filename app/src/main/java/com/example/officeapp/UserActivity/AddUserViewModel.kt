@@ -21,8 +21,23 @@ class AddUserViewModel(): ViewModel(),AddUserRepViewModelConnector
 
     }
 
+    fun removeUser(nick:String, currentNick:String)
+    {
+        if(nick.isNullOrEmpty())
+            state.value="Enter user information first."
+        else if(nick==currentNick)
+            state.value="Removing current account."
+        else
+            repository.removeUser(nick, true)
+    }
+
     override fun setState(state: String) {
         this.state.value=state
+    }
+
+    fun removeAccount(currentNick: String)
+    {
+        repository.removeUser(currentNick, false)
     }
 
 }

@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity()
             val intent= Intent(this, AdminActivity::class.java)
             intent.putExtra(Constants.LOGGEDIN_USERID, user.getUserID())
             intent.putExtra(Constants.LOGGEDIN_USERNAME, user.getUserName())
+            intent.putExtra(Constants.LOGGEDIN_USERNICK, user.getUserNickname())
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             startActivity(intent)

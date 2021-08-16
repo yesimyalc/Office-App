@@ -10,8 +10,8 @@ class Date (date:Int, month:Int, year:Int, max:Int, peopleAmount:Int=0):Date(yea
         fun getState():String{return state}
     private var maxCapacity:Int=max
         fun getCap():Int{return maxCapacity}
-    private var current:Int=peopleAmount
-        fun getCurrentPeopleAmount():Int{return current}
+
+    fun getCurrentPeopleAmount():Int{return users.size}
     private var monthNoString:String?=null
          fun getMonthNoString():String?{return monthNoString}
     private var monthString:String?=null
@@ -28,7 +28,6 @@ class Date (date:Int, month:Int, year:Int, max:Int, peopleAmount:Int=0):Date(yea
         setWeekDayString()
         setMonthNoString()
         setCapacity(max)
-        setPeopleAmount(peopleAmount)
     }
 
     fun setMonthNoString()
@@ -74,27 +73,15 @@ class Date (date:Int, month:Int, year:Int, max:Int, peopleAmount:Int=0):Date(yea
 
     fun setCapacity(newCap:Int)
     {
-        if(newCap>=0 && newCap>=current)
-            maxCapacity=newCap
-        else
-            throw IllegalArgumentException("You cannot assign $newCap as maxCapacity. It is too low")
-
+        maxCapacity=newCap
         setState()
-    }
-
-    fun setPeopleAmount(newAmount:Int)
-    {
-        if(newAmount<0 || newAmount>maxCapacity)
-            throw IllegalArgumentException("You cannot assign $newAmount as people amount.")
-        else
-            current=newAmount
     }
 
     fun setState()
     {
-        if(current<=maxCapacity/2)
+        if(getCurrentPeopleAmount()<=maxCapacity/2)
             state="Mostly Available"
-        else if(current>maxCapacity/2 && current<maxCapacity)
+        else if(getCurrentPeopleAmount()>maxCapacity/2 && getCurrentPeopleAmount()<maxCapacity)
             state="Mostly Full"
         else
             state="Full"
@@ -103,14 +90,12 @@ class Date (date:Int, month:Int, year:Int, max:Int, peopleAmount:Int=0):Date(yea
     fun addUser(userID:String, userName:String)
     {
         users.put(userID, userName)
-        current++
         setState()
     }
 
     fun deleteUser(userID:String)
     {
         users.remove(userID)
-        current--
         setState()
     }
 

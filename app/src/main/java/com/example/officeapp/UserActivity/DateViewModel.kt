@@ -16,7 +16,7 @@ class DateViewModel(val state: SavedStateHandle) : ViewModel(), DateRepositoryVi
     fun addUser(userID:String, userName:String)
     {
         chosenDate.value=chosenDate.value
-        repository?.addUser(userID, userName)
+        repository?.addUser(userID, userName, chosenDate?.value!!.getCap())
     }
 
     fun deleteUser(userID: String)
@@ -31,9 +31,20 @@ class DateViewModel(val state: SavedStateHandle) : ViewModel(), DateRepositoryVi
         repository= DateRepository(""+chosenDate.value!!.date+" "+chosenDate.value!!.getMonthNoString()+" "+chosenDate.value!!.year, this)
     }
 
+    fun changeCapacity(newCap: Int)
+    {
+        repository?.changeCapacity(newCap)
+    }
+
     override fun onChangeDayUsers(users:HashMap<String, String>) {
         chosenDate.value?.getUsers()?.clear()
         chosenDate.value?.getUsers()?.putAll(users)
+        chosenDate.value?.setState()
+        chosenDate.value=chosenDate.value
+    }
+
+    override fun onCapacityChange(newCap: Long) {
+        chosenDate.value?.setCapacity(newCap.toInt())
         chosenDate.value=chosenDate.value
     }
 }

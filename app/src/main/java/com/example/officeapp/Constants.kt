@@ -11,6 +11,7 @@ object Constants {
     const val LOGGEDIN_USER="loggedin_user"
     const val LOGGEDIN_USERID="loggedin_userid"
     const val LOGGEDIN_USERNAME="loggedin_username"
+    const val LOGGEDIN_USERNICK="loggedin_usernick"
     const val DATE_LIST="date_list"
     const val CHOSEN_DATE="chosen_date"
 }
