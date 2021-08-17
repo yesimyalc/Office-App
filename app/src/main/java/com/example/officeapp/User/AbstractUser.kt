@@ -14,18 +14,6 @@ abstract class AbstractUser(id:String, nickname:String, name:String, password:St
     private var participatedDays=ArrayList<String>()
         override fun getParticipatedDays():ArrayList<String>{return participatedDays}
 
-    override fun changeNickName(newNickName: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun changePassword(newPassword: String) {
-
-    }
-
-    override fun changeUserName(newUserName: String) {
-        TODO("Not yet implemented")
-    }
-
     override fun equals(other: Any?): Boolean {
         if(other !is User || other==null)
             return false

@@ -9,7 +9,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class UserHomePageRepository(val connector: HomePageRepositoryConnector)
+class UserHomePageRepository(val connector: UserHomePageRepositoryConnector)
 {
     private val calendarRef:DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Calendar")
     private val capacityRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("General Capacity")
@@ -40,6 +40,7 @@ class UserHomePageRepository(val connector: HomePageRepositoryConnector)
             override fun onDataChange(snapshot: DataSnapshot) {
                 val format: DateFormat = SimpleDateFormat("dd MM yyyy", Locale.ENGLISH)
                 val c: Calendar = Calendar.getInstance()
+                val newDates=ArrayList<Date>()
                 for(ds in snapshot.children)
                 {
                     val date:java.util.Date?=format.parse(ds.key.toString())
@@ -55,8 +56,10 @@ class UserHomePageRepository(val connector: HomePageRepositoryConnector)
                             addedDate.addUser(user.key!!, user.value!!.toString())
                         }
                         calendar.add(addedDate)
-                        connector.onDatesDateChanged(addedDate)
+                        newDates.add(addedDate)
                     }
+                    if(!newDates.isEmpty())
+                        connector.onDatesDateChanged(newDates)
                 }
             }
 

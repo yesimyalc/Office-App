@@ -59,23 +59,28 @@ class DateFragment(layout:Int) : Fragment(layout)
 
         val editCapacityIcon=fragmentView?.findViewById<ImageView>(R.id.editCapacityIcon)
         editCapacityIcon?.setOnClickListener{
-            val dialog= Dialog(fragmentView?.context!!)
-            dialog?.setContentView(R.layout.edit_capacity_dialog)
-            dialog?.show()
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-            val capacityPicker=dialog?.findViewById<NumberPicker>(R.id.capacityPicker)
-            capacityPicker?.maxValue=1000
-            capacityPicker?.minValue=0
-
-            val saveButton=dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
-            saveButton?.setOnClickListener {
-                viewModel.changeCapacity(capacityPicker?.value!!)
-                dialog.dismiss()
-            }
+            editCapacity()
         }
 
         return fragmentView
+    }
+
+    private fun editCapacity() {
+        val dialog = Dialog(fragmentView?.context!!)
+        dialog?.setContentView(R.layout.edit_capacity_dialog)
+        dialog?.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val capacityPicker = dialog?.findViewById<NumberPicker>(R.id.capacityPicker)
+        capacityPicker?.maxValue = 1000
+        capacityPicker?.minValue = 0
+        capacityPicker?.value=viewModel?.getChosenDate().value!!.getCap()
+
+        val saveButton = dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
+        saveButton?.setOnClickListener {
+            viewModel.changeCapacity(capacityPicker?.value!!)
+            dialog.dismiss()
+        }
     }
 
     private fun setParticipantRecyclerView()

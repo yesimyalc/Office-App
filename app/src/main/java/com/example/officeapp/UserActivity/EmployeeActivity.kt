@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.officeapp.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 
 class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
@@ -13,6 +14,8 @@ class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
     private val homeFragment= UserHomePageFragment.newInstance(this)
     private val profileFragment= UserProfileFragment()
     private val dateFragment= DateFragment(R.layout.fragment_date)
+
+    private var navigationBarEmployee:BottomNavigationView?=null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -26,21 +29,13 @@ class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
 
         changeFragment(homeFragment, "Home Page")
 
-        val navigationBarEmployee=findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(
+        navigationBarEmployee=findViewById(
             R.id.navigationBarEmployee)
-        navigationBarEmployee.setOnItemSelectedListener(object : NavigationBarView.OnItemSelectedListener{
+        navigationBarEmployee?.setOnItemSelectedListener(object : NavigationBarView.OnItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId)
                 {
-                    R.id.home ->{
-                        val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
-                        val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-                        if(!((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible()))) {
-
-                            if(!supportFragmentManager.popBackStackImmediate ("Home Page", FragmentManager.POP_BACK_STACK_INCLUSIVE))
-                                changeFragment(homeFragment, "Home Page")
-                        }
-                    }
+                    R.id.home ->{ changeFragment(homeFragment, "Home Page") }
                     R.id.profile ->{changeFragment(profileFragment, "Profile Page")}
                 }
                 return true
@@ -49,10 +44,10 @@ class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
 
         supportFragmentManager.addOnBackStackChangedListener {
 
-            val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
-            val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-            if (((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible())) && navigationBarEmployee.selectedItemId!=R.id.home) {
-                navigationBarEmployee.selectedItemId=R.id.home
+            val dateFragment: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+            val homeFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
+            if (((dateFragment != null && dateFragment.isVisible()) || (homeFragment != null && homeFragment.isVisible())) && navigationBarEmployee?.selectedItemId!=R.id.home) {
+                navigationBarEmployee?.menu?.getItem(0)?.setChecked(true)
             }
         }
     }

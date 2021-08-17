@@ -71,31 +71,34 @@ class AddUserFragment: Fragment(R.layout.fragment_add_user)
                 removedUserNick?.clearFocus()
             }
             else if(viewModel.getState().value=="Removing current account.")
-            {
-                val dialog= Dialog(fragmentView?.context!!)
-                dialog?.setContentView(R.layout.remove_account_dialog)
-                dialog?.show()
-                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-
-                val noButton=dialog.findViewById<LinearLayout>(R.id.noButton)
-                noButton.setOnClickListener {
-                    dialog.dismiss()
-                }
-                val yesButton=dialog.findViewById<LinearLayout>(R.id.yesButton)
-                yesButton.setOnClickListener {
-
-                    viewModel.removeAccount(arguments?.getString(Constants.LOGGEDIN_USERNICK)!!)
-
-                    val intent= Intent(context, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                    startActivity(intent)
-                    activity?.finish()
-                }
-            }
+                removeCurrentAccount()
         })
 
         return fragmentView
+    }
+
+    private fun removeCurrentAccount()
+    {
+        val dialog= Dialog(fragmentView?.context!!)
+        dialog?.setContentView(R.layout.remove_account_dialog)
+        dialog?.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
+        val noButton=dialog.findViewById<LinearLayout>(R.id.noButton)
+        noButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        val yesButton=dialog.findViewById<LinearLayout>(R.id.yesButton)
+        yesButton.setOnClickListener {
+
+            viewModel.removeAccount(arguments?.getString(Constants.LOGGEDIN_USERNICK)!!)
+
+            val intent= Intent(context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            startActivity(intent)
+            activity?.finish()
+        }
     }
 
     override fun onDestroy() {

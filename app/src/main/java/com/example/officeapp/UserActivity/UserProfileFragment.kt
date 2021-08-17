@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.hawk.Hawk
 
 class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), ProfileDatesRVConnector
 {
@@ -41,51 +42,71 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
             setupUserInfo()
         })
 
+        val dialog= Dialog(requireContext())
         val editInfoButton=fragmentView?.findViewById<androidx.cardview.widget.CardView>(R.id.editButton)
         editInfoButton?.setOnClickListener {
-            val dialog= Dialog(fragmentView?.context!!)
-            dialog?.setContentView(R.layout.edit_info_dialog)
-            dialog?.show()
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            editInfo(dialog)
+        }
 
-            val newUserNick=dialog.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.newUserNick)
-            val newUserPass=dialog.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.newUserPass)
+        viewModel?.getEditState().observe(viewLifecycleOwner,{
+            Log.i("MyMessage", viewModel.getEditState().value!!)
+            if(viewModel.getEditState().value!=null )
+            {
+                Toast.makeText(requireContext(), viewModel.getEditState().value, Toast.LENGTH_SHORT).show()
 
-            newUserNick.setText(viewModel?.getLoggedInUser().value?.getUserNickname())
-            newUserPass.setText(viewModel?.getLoggedInUser().value?.getUserPassword())
-
-            val saveSettingButton=dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
-            saveSettingButton?.setOnClickListener {
-                val text=viewModel?.editInfo(newUserNick.text.toString(), newUserPass.text.toString())
-                if(text!=null)
-                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-                else
+                if(viewModel.getEditState().value=="New information has been saved.")
                     dialog.dismiss()
             }
-        }
+        })
 
         val logoutButton=fragmentView?.findViewById<androidx.cardview.widget.CardView>(R.id.logoutButton)
         logoutButton?.setOnClickListener {
-            val dialog= Dialog(fragmentView?.context!!)
-            dialog?.setContentView(R.layout.logout_dialog)
-            dialog?.show()
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-
-            val noButton=dialog.findViewById<LinearLayout>(R.id.noButton)
-            noButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            val yesButton=dialog.findViewById<LinearLayout>(R.id.yesButton)
-            yesButton.setOnClickListener {
-                val intent= Intent(context, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent)
-                activity?.finish()
-            }
+            logout()
         }
 
         return fragmentView
+    }
+
+    private fun editInfo(dialog:Dialog)
+    {
+        dialog?.setContentView(R.layout.edit_info_dialog)
+        dialog?.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
+        val newUserNick=dialog.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.newUserNick)
+        val newUserPass=dialog.findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.newUserPass)
+
+        newUserNick.setText(viewModel?.getLoggedInUser().value?.getUserNickname())
+        newUserPass.setText(viewModel?.getLoggedInUser().value?.getUserPassword())
+
+        val saveSettingButton=dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
+        saveSettingButton?.setOnClickListener {
+            viewModel?.editInfo(newUserNick.text.toString(), newUserPass.text.toString())
+        }
+    }
+
+    private fun logout()
+    {
+        val dialog= Dialog(requireContext())
+        dialog?.setContentView(R.layout.logout_dialog)
+        dialog?.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
+        val noButton=dialog.findViewById<LinearLayout>(R.id.noButton)
+        noButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        val yesButton=dialog.findViewById<LinearLayout>(R.id.yesButton)
+        yesButton.setOnClickListener {
+            val intent= Intent(context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            Hawk.delete("loggedInUserPass")
+            Hawk.delete("loggedInUserNick")
+
+            startActivity(intent)
+            activity?.finish()
+        }
     }
 
     private fun setupUserInfo()

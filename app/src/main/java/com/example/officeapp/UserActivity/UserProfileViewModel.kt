@@ -7,10 +7,13 @@ import androidx.lifecycle.ViewModel
 
 class UserProfileViewModel(val state: SavedStateHandle): ViewModel(),ProfileViewRepConnector
 {
-    private var loggedInUser:MutableLiveData<User> =state.getLiveData(Constants.LOGGEDIN_USER)
+    private val loggedInUser:MutableLiveData<User> =state.getLiveData(Constants.LOGGEDIN_USER)
         fun getLoggedInUser():LiveData<User>{return loggedInUser}
 
     private var repository:UserProfileRepository?=null
+
+    private val editState=MutableLiveData<String>()
+        fun getEditState():LiveData<String>{return editState}
 
     fun setLoggedInUserID(userID:String)
     {
@@ -21,18 +24,22 @@ class UserProfileViewModel(val state: SavedStateHandle): ViewModel(),ProfileView
         loggedInUser.value=user
     }
 
+    override fun onChangeEditState(editState: String) {
+        this.editState.value=editState
+    }
+
     fun deleteDay(day:String)
     {
         loggedInUser.value=loggedInUser.value
         repository?.deleteUserFromDate(day)
     }
 
-    fun editInfo(nick: String, pass:String):String?
+    fun editInfo(nick: String, pass:String)
     {
-        if(nick.isNullOrEmpty() || pass.isNullOrEmpty())
-            return "Enter information first."
+        if(nick.isNullOrEmpty() || pass.isNullOrEmpty()) {
+            editState.value = "Enter information first."
+            return
+        }
         repository?.editUserInfo(nick, pass)
-
-        return null
     }
 }

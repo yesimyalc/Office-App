@@ -14,4 +14,5 @@ object Constants {
     const val LOGGEDIN_USERNICK="loggedin_usernick"
     const val DATE_LIST="date_list"
     const val CHOSEN_DATE="chosen_date"
+    const val SEVEN_DAYS="seven_days"
 }

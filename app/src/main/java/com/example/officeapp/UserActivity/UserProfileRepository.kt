@@ -7,13 +7,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class UserProfileRepository(val userID: String, connector: ProfileViewRepConnector)
+class UserProfileRepository(val userID: String, val connector: ProfileViewRepConnector)
 {
-    private val userRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Employees").child(userID)
+    private val userRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Employees")
     private val dateRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Calendar")
 
     init{
-        userRef.addValueEventListener(object : ValueEventListener{
+        userRef.child(userID).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val nick=snapshot.child(Constants.R_USER_NICK).value.toString()
                 val name=snapshot.child(Constants.R_USERNAME).value.toString()
@@ -53,12 +53,36 @@ class UserProfileRepository(val userID: String, connector: ProfileViewRepConnect
     fun deleteUserFromDate(day:String)
     {
         dateRef.child(day).child("Users").child(userID).removeValue()
-        userRef.child("Days").child(day).removeValue()
+        userRef.child(userID).child("Days").child(day).removeValue()
     }
 
     fun editUserInfo(nick: String, pass:String)
     {
-        userRef.child(Constants.R_USER_NICK).setValue(nick)
-        userRef.child(Constants.R_USERPASS).setValue(pass)
+        userRef.orderByChild("r_user_nick").equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()) {
+                    userRef.child(userID).child(Constants.R_USER_NICK).setValue(nick)
+                    connector.onChangeEditState("New information has been saved.")
+                }
+                else
+                {
+                    for(ds in snapshot.children)
+                        if(ds.child("r_user_nick").value==nick)
+                        {
+                            if(ds.key!=userID)
+                                connector.onChangeEditState("There is already a user with the given nickname.")
+                            else
+                                connector.onChangeEditState("New information has been saved.")
+
+                            break
+                        }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ERROR", error.message)
+            }
+        })
+        userRef.child(userID).child(Constants.R_USERPASS).setValue(pass)
     }
 }

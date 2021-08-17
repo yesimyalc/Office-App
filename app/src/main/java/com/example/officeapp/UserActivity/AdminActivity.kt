@@ -37,15 +37,7 @@ class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId)
                 {
-                    R.id.home ->{
-                        val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
-                        val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-                        if(!((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible()))) {
-
-                            if(!supportFragmentManager.popBackStackImmediate ("Home Page", FragmentManager.POP_BACK_STACK_INCLUSIVE))
-                                changeFragment(homeFragment, "Home Page")
-                        }
-                    }
+                    R.id.home ->{ changeFragment(homeFragment, "Home Page") }
                     R.id.profile ->{changeFragment(profileFragment, "Profile Page")}
                     R.id.addUser ->{changeFragment(addUserFragment, "Add User Page")}
                     R.id.settings ->{changeFragment(settingsFragment, "Settings Page")}
@@ -56,10 +48,10 @@ class AdminActivity : AppCompatActivity(),ActivityFragmentConnector
 
         supportFragmentManager.addOnBackStackChangedListener {
 
-            val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
-            val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-            if (((myFragment2 != null && myFragment2.isVisible()) || (myFragment != null && myFragment.isVisible())) && navigationBarAdmin.selectedItemId!=R.id.home) {
-                navigationBarAdmin.selectedItemId=R.id.home
+            val dateFragment: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+            val homeFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
+            if (((dateFragment != null && dateFragment.isVisible()) || (homeFragment != null && homeFragment.isVisible())) && navigationBarAdmin.selectedItemId!=R.id.home) {
+                navigationBarAdmin?.menu?.getItem(0)?.setChecked(true)
             }
         }
     }
