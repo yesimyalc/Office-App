@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModel
 class AddUserViewModel(): ViewModel(),AddUserRepViewModelConnector
 {
     private val repository=AddUserRepository(this)
-    private val state=MutableLiveData<String>()
-        fun getState():LiveData<String>{return state}
+    private val state=MutableLiveData<AddRemoveUserState>()
+        fun getState():LiveData<AddRemoveUserState>{return state}
 
     fun addUser(nick:String, name:String, pass:String, isAdmin:Boolean, isEmployee:Boolean)
     {
         if(nick.isNullOrEmpty() || name.isNullOrEmpty() || pass.isNullOrEmpty())
-            state.value="Enter user information first."
+            state.value=AddRemoveUserState.WAITING_INFO
         else if(isAdmin==false && isEmployee==false)
-            state.value="Select admin or employee."
+            state.value=AddRemoveUserState.WAITING_STATUS
         else
             repository.addUser(nick, name, pass, isAdmin)
 
@@ -24,14 +24,14 @@ class AddUserViewModel(): ViewModel(),AddUserRepViewModelConnector
     fun removeUser(nick:String, currentNick:String)
     {
         if(nick.isNullOrEmpty())
-            state.value="Enter user information first."
+            state.value=AddRemoveUserState.WAITING_INFO
         else if(nick==currentNick)
-            state.value="Removing current account."
+            state.value=AddRemoveUserState.CURRENT_ACCOUNT
         else
             repository.removeUser(nick, true)
     }
 
-    override fun setState(state: String) {
+    override fun setState(state: AddRemoveUserState) {
         this.state.value=state
     }
 

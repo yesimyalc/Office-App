@@ -7,12 +7,12 @@ class MainRepository(val connector:LogInRepVMConnector)
 {
     private val employeesRef: DatabaseReference = FirebaseDatabase.getInstance().getReference().child("Employees")
 
-    fun containsUser(searchedNick:String, searchedPass:String)
+    fun retrieveUser(searchedNick:String, searchedPass:String)
     {
         employeesRef.orderByChild(Constants.R_USER_NICK).equalTo(searchedNick).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!snapshot.exists())
-                    connector.onLogIn(null)
+                    connector.onRetrieveUser(null)
                 else
                 {
                     for(ds in snapshot.children)
@@ -24,13 +24,13 @@ class MainRepository(val connector:LogInRepVMConnector)
                             val pass=ds.child(Constants.R_USERPASS).value.toString()
                             val status=ds.child(Constants.R_USERSTATUS).value.toString()
 
-                            var user:User?=null
-                            if(status=="ADMIN")
+                            val user: User?
+                            if(status==LogInStates.ADMIN.text)
                                 user=Admin(id, nick, name, pass)
                             else
                                 user=Employee(id, nick, name, pass)
 
-                            connector.onLogIn(user)
+                            connector.onRetrieveUser(user)
                             break
                         }
                 }

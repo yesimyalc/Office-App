@@ -1,5 +1,5 @@
 package com.example.officeapp
 
 interface AddUserRepViewModelConnector {
-    fun setState(state:String)
+    fun setState(state:AddRemoveUserState)
 }

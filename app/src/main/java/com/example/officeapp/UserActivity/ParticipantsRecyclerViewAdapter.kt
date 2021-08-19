@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ParticipantsRecyclerViewAdapter(val participants:ArrayList<String>, val context: Context) :RecyclerView.Adapter<ParticipantsRecyclerViewAdapter.ViewHolder>()
+class ParticipantsRecyclerViewAdapter(val context: Context) :RecyclerView.Adapter<ParticipantsRecyclerViewAdapter.ViewHolder>()
 {
+    var participants=ArrayList<String>()
     class ViewHolder(view: View): RecyclerView.ViewHolder(view)
     {
         val participantName=view.findViewById<TextView>(R.id.participantName)
@@ -24,5 +25,10 @@ class ParticipantsRecyclerViewAdapter(val participants:ArrayList<String>, val co
 
     override fun getItemCount(): Int {
         return participants.size
+    }
+
+    fun setNewParticipants(participants:ArrayList<String>)
+    {
+        this.participants=participants
     }
 }

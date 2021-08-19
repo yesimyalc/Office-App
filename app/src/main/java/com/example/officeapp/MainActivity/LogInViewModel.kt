@@ -15,10 +15,10 @@ class LogInViewModel:ViewModel(),LogInRepVMConnector
 
     fun logIn(nick: String, pass:String)
     {
-        repository.containsUser(nick, pass)
+        repository.retrieveUser(nick, pass)
     }
 
-    override fun onLogIn(user: User?) {
+    override fun onRetrieveUser(user: User?) {
         retrievedUser=user
         if(user==null)
             logInState.value=LogInStates.INVALID_USER

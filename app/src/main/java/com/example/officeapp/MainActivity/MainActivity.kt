@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity()
 
     private fun initiateAutoLogIn()
     {
-        val userPass=Hawk.get<String>("loggedInUserPass")
-        val userNick=Hawk.get<String>("loggedInUserNick")
+        val userPass=Hawk.get<String>(Constants.LOGGEDIN_PASS)
+        val userNick=Hawk.get<String>(Constants.LOGGEDIN_USERNICK)
 
         if(userNick!=null && userPass!=null)
             viewModel.logIn(userNick, userPass)
@@ -42,13 +42,12 @@ class MainActivity : AppCompatActivity()
 
     private fun startAdminActivity()
     {
-        Hawk.put("loggedInUserPass", viewModel.getRetrievedUser()!!.getUserPassword())
-        Hawk.put("loggedInUserNick", viewModel.getRetrievedUser()!!.getUserNickname())
+        Hawk.put(Constants.LOGGEDIN_PASS, viewModel.getRetrievedUser()!!.getUserPassword())
+        Hawk.put(Constants.LOGGEDIN_USERNICK, viewModel.getRetrievedUser()!!.getUserNickname())
+        Hawk.put(Constants.LOGGEDIN_USERNAME, viewModel.getRetrievedUser()!!.getUserName())
+        Hawk.put(Constants.LOGGEDIN_USERID, viewModel.getRetrievedUser()!!.getUserID())
 
         Intent(this, AdminActivity::class.java).apply {
-            putExtra(Constants.LOGGEDIN_USERID, viewModel.getRetrievedUser()!!.getUserID())
-            putExtra(Constants.LOGGEDIN_USERNAME, viewModel.getRetrievedUser()!!.getUserName())
-            putExtra(Constants.LOGGEDIN_USERNICK, viewModel.getRetrievedUser()!!.getUserNickname())
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }.also {
             startActivity(it)
@@ -59,12 +58,12 @@ class MainActivity : AppCompatActivity()
 
     private fun startEmployeeActivity()
     {
-        Hawk.put("loggedInUserPass", viewModel.getRetrievedUser()!!.getUserPassword())
-        Hawk.put("loggedInUserNick", viewModel.getRetrievedUser()!!.getUserNickname())
+        Hawk.put(Constants.LOGGEDIN_PASS, viewModel.getRetrievedUser()!!.getUserPassword())
+        Hawk.put(Constants.LOGGEDIN_USERNICK, viewModel.getRetrievedUser()!!.getUserNickname())
+        Hawk.put(Constants.LOGGEDIN_USERNAME, viewModel.getRetrievedUser()!!.getUserName())
+        Hawk.put(Constants.LOGGEDIN_USERID, viewModel.getRetrievedUser()!!.getUserID())
 
         val intent= Intent(this, EmployeeActivity::class.java)
-        intent.putExtra(Constants.LOGGEDIN_USERID, viewModel.getRetrievedUser()!!.getUserID())
-        intent.putExtra(Constants.LOGGEDIN_USERNAME, viewModel.getRetrievedUser()!!.getUserName())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(intent)
