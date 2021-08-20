@@ -13,31 +13,34 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.hawk.Hawk
 
-class DateFragment(layout:Int) : Fragment(layout)
+class DateFragment() : Fragment()
 {
     private var fragmentView:View?=null
     private val viewModel:DateViewModel by viewModels()
     private var participantsRVAdapter:ParticipantsRecyclerViewAdapter?=null
-    private val userNameList=ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        fragmentView=super.onCreateView(inflater, container, savedInstanceState)
+        fragmentView=inflater.inflate(Hawk.get(Constants.DATE_LAYOUT) as Int, container, false)
 
-        viewModel.setChosenDate(arguments?.getSerializable(Constants.CHOSEN_DATE) as Date)
-        val userName=arguments?.getString(Constants.LOGGEDIN_USERNAME)!!
-        val userID=arguments?.getString(Constants.LOGGEDIN_USERID)!!
+        if(arguments?.getSerializable(Constants.CHOSEN_DATE)!=null)
+            viewModel.setChosenDate(arguments?.getSerializable(Constants.CHOSEN_DATE) as Date)
+
+        val userName:String= Hawk.get(Constants.LOGGEDIN_USERNAME)
+        val userID:String= Hawk.get(Constants.LOGGEDIN_USERID)
+
+        setParticipantRecyclerView()
 
         viewModel.getChosenDate().observe(viewLifecycleOwner, {
-            userNameList.clear()
+            val userNameList=ArrayList<String>()
             val userMap=viewModel.getChosenDate().value!!.getUsers()
             for(user in userMap)
                 userNameList.add(user.value)
+            participantsRVAdapter?.setNewParticipants(userNameList)
             participantsRVAdapter?.notifyDataSetChanged()
             setDateInfo()
         })
-
-        setParticipantRecyclerView()
 
         val participateButton=fragmentView?.findViewById<LinearLayout>(R.id.participateButton)
         participateButton?.setOnClickListener {
@@ -87,7 +90,7 @@ class DateFragment(layout:Int) : Fragment(layout)
     {
         val participantsRV = fragmentView?.findViewById<RecyclerView>(R.id.participantsRV)
         participantsRV?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        participantsRVAdapter = ParticipantsRecyclerViewAdapter(userNameList, activity?.applicationContext!!)
+        participantsRVAdapter = ParticipantsRecyclerViewAdapter(activity?.applicationContext!!)
         participantsRV?.adapter = participantsRVAdapter
     }
 

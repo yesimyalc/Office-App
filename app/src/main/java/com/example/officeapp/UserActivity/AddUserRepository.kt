@@ -17,10 +17,10 @@ class AddUserRepository(val connector: AddUserRepViewModelConnector)
 
     fun addUser(nick:String, name:String, pass:String, admin:Boolean)
     {
-        userRef.orderByChild("r_user_nick").equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
+        userRef.orderByChild(Constants.R_USER_NICK).equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
-                    connector.setState("User already exists.")
+                    connector.setState(AddRemoveUserState.EXISTING_USER)
                 }
                 else
                 {
@@ -29,11 +29,11 @@ class AddUserRepository(val connector: AddUserRepViewModelConnector)
                     userRef.child(id).child(Constants.R_USERNAME).setValue(name)
                     userRef.child(id).child(Constants.R_USERPASS).setValue(pass)
                     if(admin)
-                        userRef.child(id).child(Constants.R_USERSTATUS).setValue("ADMIN")
+                        userRef.child(id).child(Constants.R_USERSTATUS).setValue(LogInStates.ADMIN.text)
                     else
-                        userRef.child(id).child(Constants.R_USERSTATUS).setValue("EMPLOYEE")
+                        userRef.child(id).child(Constants.R_USERSTATUS).setValue(LogInStates.EMPLOYEE.text)
 
-                    connector.setState("New user is added.")
+                    connector.setState(AddRemoveUserState.USER_ADDED)
                 }
             }
 
@@ -45,15 +45,15 @@ class AddUserRepository(val connector: AddUserRepViewModelConnector)
 
     fun removeUser(nick:String, stateChange:Boolean)
     {
-        userRef.orderByChild("r_user_nick").equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
+        userRef.orderByChild(Constants.R_USER_NICK).equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!snapshot.exists()){
-                    connector.setState("User does not exist.")
+                    connector.setState(AddRemoveUserState.NON_EXISTING_USER)
                 }
                 else
                 {
                     for(ds in snapshot.children)
-                        if(ds.child("r_user_nick").value==nick)
+                        if(ds.child(Constants.R_USER_NICK).value==nick)
                         {
                             val dates=ArrayList<String>()
                             for(days in ds.child("Days").children)
@@ -65,7 +65,7 @@ class AddUserRepository(val connector: AddUserRepViewModelConnector)
                         }
 
                     if(stateChange)
-                        connector.setState("User is removed.")
+                        connector.setState(AddRemoveUserState.USER_REMOVED)
                 }
             }
 

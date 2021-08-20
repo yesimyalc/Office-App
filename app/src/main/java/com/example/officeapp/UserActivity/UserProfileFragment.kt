@@ -26,20 +26,20 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
     private val viewModel:UserProfileViewModel by viewModels()
     private var fragmentView:View?=null
     private var participatedDaysRVAdapter:ParticipatedDaysRVAdapter?=null
-    private var dates=ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         fragmentView=super.onCreateView(inflater, container, savedInstanceState)
-        viewModel.setLoggedInUserID(arguments?.getString(Constants.LOGGEDIN_USERID)!!)
 
         setupAdapters()
 
         viewModel.getLoggedInUser().observe(viewLifecycleOwner, {
-            dates.clear()
-            dates.addAll(viewModel.getLoggedInUser().value?.getParticipatedDays()!!)
-            participatedDaysRVAdapter?.notifyDataSetChanged()
             setupUserInfo()
+        })
+
+        viewModel.getUsersParticipatedDays().observe(viewLifecycleOwner, {
+            participatedDaysRVAdapter?.setDays(viewModel.getUsersParticipatedDays().value!!)
+            participatedDaysRVAdapter?.notifyDataSetChanged()
         })
 
         val dialog= Dialog(requireContext())
@@ -49,12 +49,12 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
         }
 
         viewModel?.getEditState().observe(viewLifecycleOwner,{
-            Log.i("MyMessage", viewModel.getEditState().value!!)
             if(viewModel.getEditState().value!=null )
             {
-                Toast.makeText(requireContext(), viewModel.getEditState().value, Toast.LENGTH_SHORT).show()
+                if(viewModel.getEditState().value!=EditProfileStates.REFRESHED)
+                    Toast.makeText(requireContext(), viewModel.getEditState().value?.text, Toast.LENGTH_SHORT).show()
 
-                if(viewModel.getEditState().value=="New information has been saved.")
+                if(viewModel.getEditState().value==EditProfileStates.SUCCESSFUL)
                     dialog.dismiss()
             }
         })
@@ -65,6 +65,11 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
         }
 
         return fragmentView
+    }
+
+    override fun onDestroyView() {
+        viewModel.onChangeEditState(EditProfileStates.REFRESHED)
+        super.onDestroyView()
     }
 
     private fun editInfo(dialog:Dialog)
@@ -78,6 +83,9 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
 
         newUserNick.setText(viewModel?.getLoggedInUser().value?.getUserNickname())
         newUserPass.setText(viewModel?.getLoggedInUser().value?.getUserPassword())
+
+        Hawk.put(Constants.LOGGEDIN_PASS, viewModel?.getLoggedInUser().value?.getUserPassword())
+        Hawk.put(Constants.LOGGEDIN_USERNICK, viewModel?.getLoggedInUser().value?.getUserNickname())
 
         val saveSettingButton=dialog.findViewById<LinearLayout>(R.id.saveSettingsButton)
         saveSettingButton?.setOnClickListener {
@@ -101,8 +109,11 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
             val intent= Intent(context, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            Hawk.delete("loggedInUserPass")
-            Hawk.delete("loggedInUserNick")
+            Hawk.delete(Constants.LOGGEDIN_USERNICK)
+            Hawk.delete(Constants.LOGGEDIN_PASS)
+            Hawk.delete(Constants.LOGGEDIN_USERNAME)
+            Hawk.delete(Constants.LOGGEDIN_USERID)
+            dialog.dismiss()
 
             startActivity(intent)
             activity?.finish()
@@ -132,7 +143,7 @@ class UserProfileFragment: Fragment(R.layout.fragment_employee_profile), Profile
     {
         val participatedRV = fragmentView?.findViewById<RecyclerView>(R.id.participatedDatesRV)
         participatedRV?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        participatedDaysRVAdapter = ParticipatedDaysRVAdapter(dates, activity?.applicationContext!!, this)
+        participatedDaysRVAdapter = ParticipatedDaysRVAdapter(activity?.applicationContext!!, this)
         participatedRV?.adapter = participatedDaysRVAdapter
     }
 

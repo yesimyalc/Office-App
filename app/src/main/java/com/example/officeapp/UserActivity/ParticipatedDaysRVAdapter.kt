@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ParticipatedDaysRVAdapter(val participatedDays:ArrayList<String>, val context: Context, val connector: ProfileDatesRVConnector) :
+class ParticipatedDaysRVAdapter(val context: Context, val connector: ProfileDatesRVConnector) :
     RecyclerView.Adapter<ParticipatedDaysRVAdapter.ViewHolder>()
 {
+    var participatedDays=ArrayList<String>()
     class ViewHolder(view: View): RecyclerView.ViewHolder(view)
     {
         val participatedDate=view.findViewById<TextView>(R.id.participatedDate)
@@ -32,5 +33,10 @@ class ParticipatedDaysRVAdapter(val participatedDays:ArrayList<String>, val cont
 
     override fun getItemCount(): Int {
         return participatedDays.size
+    }
+
+    fun setDays(days:ArrayList<String>)
+    {
+        participatedDays=days
     }
 }

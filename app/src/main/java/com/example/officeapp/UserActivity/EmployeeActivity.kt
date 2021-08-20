@@ -3,31 +3,30 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.officeapp.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.orhanobut.hawk.Hawk
 
 class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
 {
     private val homeFragment= UserHomePageFragment.newInstance(this)
     private val profileFragment= UserProfileFragment()
-    private val dateFragment= DateFragment(R.layout.fragment_date)
+    private val dateFragment= DateFragment()
 
     private var navigationBarEmployee:BottomNavigationView?=null
+
+    private val viewModel: UserActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_employee)
 
-        val bundle = Bundle()
-        bundle.putString(Constants.LOGGEDIN_USERID, intent.getStringExtra(Constants.LOGGEDIN_USERID))
-        bundle.putString(Constants.LOGGEDIN_USERNAME, intent.getStringExtra(Constants.LOGGEDIN_USERNAME))
-        profileFragment.arguments = bundle
-
-        changeFragment(homeFragment, "Home Page")
+        changeFragment(homeFragment, NavigationStates.HOME_PAGE.stateText)
 
         navigationBarEmployee=findViewById(
             R.id.navigationBarEmployee)
@@ -35,35 +34,82 @@ class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId)
                 {
-                    R.id.home ->{ changeFragment(homeFragment, "Home Page") }
-                    R.id.profile ->{changeFragment(profileFragment, "Profile Page")}
+                    R.id.home ->{
+                        navigationBarEmployee?.menu?.getItem(0)?.setChecked(true)
+                        viewModel.setNavigationState(NavigationStates.HOME_PAGE)
+                    }
+                    R.id.profile ->{viewModel.setNavigationState(NavigationStates.USER_PROFILE)}
                 }
                 return true
             }
         })
 
-        supportFragmentManager.addOnBackStackChangedListener {
+        viewModel.getNavigationstate().observe(this, {
+            onNavigationStateChanged()
+        })
 
-            val dateFragment: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
-            val homeFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-            if (((dateFragment != null && dateFragment.isVisible()) || (homeFragment != null && homeFragment.isVisible())) && navigationBarEmployee?.selectedItemId!=R.id.home) {
-                navigationBarEmployee?.menu?.getItem(0)?.setChecked(true)
+        supportFragmentManager.addOnBackStackChangedListener {
+            onReturnedPrevious()
+        }
+    }
+
+    private fun onNavigationStateChanged() {
+        when (viewModel.getNavigationstate().value) {
+            NavigationStates.HOME_PAGE -> {
+                if (!navigationBarEmployee?.menu?.getItem(0)?.isChecked()!!) {
+                    navigationBarEmployee?.menu?.getItem(0)?.setChecked(true)
+                } else
+                    changeFragment(homeFragment, NavigationStates.HOME_PAGE.stateText)
+            }
+            NavigationStates.DATE_PAGE -> {
+                if (!navigationBarEmployee?.menu?.getItem(0)?.isChecked!!)
+                    navigationBarEmployee?.menu?.getItem(0)?.setChecked(true)
+                else
+                    changeFragment(dateFragment, NavigationStates.DATE_PAGE.stateText)
+            }
+            NavigationStates.USER_PROFILE -> {
+                navigationBarEmployee?.menu?.getItem(1)?.setChecked(true)
+                changeFragment(profileFragment, NavigationStates.USER_PROFILE.stateText)
             }
         }
     }
 
-    fun changeFragment(fragment: Fragment, tag:String)
+    private fun onReturnedPrevious() {
+        val dateFragment: DateFragment? =
+            supportFragmentManager.findFragmentByTag(NavigationStates.DATE_PAGE.stateText) as DateFragment?
+        val homeFragment: UserHomePageFragment? =
+            supportFragmentManager.findFragmentByTag(NavigationStates.HOME_PAGE.stateText) as UserHomePageFragment?
+        if (dateFragment != null && dateFragment.isVisible() && navigationBarEmployee?.selectedItemId != R.id.home) {
+            viewModel.setNavigationState(NavigationStates.DATE_PAGE)
+        } else if (homeFragment != null && homeFragment.isVisible() && navigationBarEmployee?.selectedItemId != R.id.home) {
+            viewModel.setNavigationState(NavigationStates.HOME_PAGE)
+        }
+    }
+
+    private fun changeFragment(fragment: Fragment, tag:String)
     {
+        var homeFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag(NavigationStates.HOME_PAGE.stateText) as UserHomePageFragment?
+        if(homeFragment!=null && fragment is UserHomePageFragment) {
+            supportFragmentManager.popBackStackImmediate(NavigationStates.HOME_PAGE.stateText,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.currentPage, fragment, tag)
+            fragmentTransaction.commit()
+            return
+        }
+
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.currentPage, fragment, tag)
 
-        val myFragment: UserHomePageFragment? = supportFragmentManager.findFragmentByTag("Home Page") as UserHomePageFragment?
-        val myFragment2: DateFragment? = supportFragmentManager.findFragmentByTag("Date Page") as DateFragment?
+        homeFragment= supportFragmentManager.findFragmentByTag(NavigationStates.HOME_PAGE.stateText) as UserHomePageFragment?
+        val dateFragment: DateFragment? = supportFragmentManager.findFragmentByTag(NavigationStates.DATE_PAGE.stateText) as DateFragment?
 
-        if (myFragment != null && myFragment.isVisible())
-            fragmentTransaction.addToBackStack("Home Page")
-        else if (myFragment2 != null && myFragment2.isVisible())
-            fragmentTransaction.addToBackStack("Date Page")
+        if (homeFragment != null && homeFragment.isVisible())
+            fragmentTransaction.addToBackStack(NavigationStates.HOME_PAGE.stateText)
+
+        else if (dateFragment != null && dateFragment.isVisible())
+            fragmentTransaction.addToBackStack(NavigationStates.DATE_PAGE.stateText)
 
         fragmentTransaction.commit()
     }
@@ -71,10 +117,9 @@ class EmployeeActivity : AppCompatActivity(), ActivityFragmentConnector
     override fun onShowDateInfo(date: Date) {
         val bundle = Bundle()
         bundle.putSerializable(Constants.CHOSEN_DATE, date)
-        bundle.putString(Constants.LOGGEDIN_USERID, intent.getStringExtra(Constants.LOGGEDIN_USERID))
-        bundle.putString(Constants.LOGGEDIN_USERNAME, intent.getStringExtra(Constants.LOGGEDIN_USERNAME))
+        Hawk.put(Constants.DATE_LAYOUT, R.layout.fragment_date)
         dateFragment.arguments = bundle
-        changeFragment(dateFragment, "Date Page")
+        viewModel.setNavigationState(NavigationStates.DATE_PAGE)
     }
 
 }

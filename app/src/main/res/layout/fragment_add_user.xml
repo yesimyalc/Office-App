@@ -44,9 +44,7 @@
                     android:textColor="@drawable/drawable_units_tab_text_color_selector"
                     android:gravity="center"
                     android:text="Add User"
-                    android:clickable="true"
                     android:checked="true"
-                    android:onClick="onAllTasks"
                     android:button="@null"
                     />
 
@@ -60,8 +58,6 @@
                     android:checked="false"
                     android:text="Remove User"
                     android:gravity="center"
-                    android:clickable="true"
-                    android:onClick="onCompletedTasks"
                     android:button="@null"
                     />
 

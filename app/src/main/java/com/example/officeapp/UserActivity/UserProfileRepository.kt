@@ -25,7 +25,7 @@ class UserProfileRepository(val userID: String, val connector: ProfileViewRepCon
                     days.add(ds.key!!)
 
                 var user:User?=null
-                if(status=="ADMIN")
+                if(status==LogInStates.ADMIN.text)
                     user=Admin(userID, nick, name, pass)
                 else
                     user=Employee(userID, nick, name, pass)
@@ -36,7 +36,7 @@ class UserProfileRepository(val userID: String, val connector: ProfileViewRepCon
                 {
                     val date:java.util.Date?=format.parse(day)
                     if(date?.compareTo(c.time)==0 || date?.compareTo(c.time)==-1)
-                        userRef.child("Days").child(day).removeValue()
+                        userRef.child(userID).child("Days").child(day).removeValue()
                     else
                         user.addDay(day)
                 }
@@ -58,21 +58,21 @@ class UserProfileRepository(val userID: String, val connector: ProfileViewRepCon
 
     fun editUserInfo(nick: String, pass:String)
     {
-        userRef.orderByChild("r_user_nick").equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
+        userRef.orderByChild(Constants.R_USER_NICK).equalTo(nick).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!snapshot.exists()) {
                     userRef.child(userID).child(Constants.R_USER_NICK).setValue(nick)
-                    connector.onChangeEditState("New information has been saved.")
+                    connector.onChangeEditState(EditProfileStates.SUCCESSFUL)
                 }
                 else
                 {
                     for(ds in snapshot.children)
-                        if(ds.child("r_user_nick").value==nick)
+                        if(ds.child(Constants.R_USER_NICK).value==nick)
                         {
                             if(ds.key!=userID)
-                                connector.onChangeEditState("There is already a user with the given nickname.")
+                                connector.onChangeEditState(EditProfileStates.NOT_SUCCESSFUL)
                             else
-                                connector.onChangeEditState("New information has been saved.")
+                                connector.onChangeEditState(EditProfileStates.SUCCESSFUL)
 
                             break
                         }
